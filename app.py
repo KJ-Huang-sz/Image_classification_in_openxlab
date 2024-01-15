@@ -1,13 +1,15 @@
+import numpy as np
 import gradio as gr
-import os
 
-# 输入一张图片，旋转45°后输出
-def image_mod(image):
-    return image.rotate(45)
+def sepia(input_img):
+    sepia_filter = np.array([
+        [0.393, 0.769, 0.189], 
+        [0.349, 0.686, 0.168], 
+        [0.272, 0.534, 0.131]
+    ])
+    sepia_img = input_img.dot(sepia_filter.T)
+    sepia_img /= sepia_img.max()
+    return sepia_img
 
-
-demo = gr.Interface(image_mod, gr.Image(type="pil"), "image",
-    allow_flagging="never")
-
-if __name__ == "__main__":
-    demo.launch()
+demo = gr.Interface(sepia, gr.Image(), "image")
+demo.launch()
